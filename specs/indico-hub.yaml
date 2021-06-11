@@ -1,0 +1,18 @@
+components:
+  securitySchemes:
+    bearer_token:
+      scheme: bearer
+      type: http
+info:
+  contact:
+    email: indico-team@cern.ch
+    name: Indico Team
+    url: https://github.com/indico/indico-hub
+  title: Indico Community Hub
+  version: 1.0-dev
+openapi: 3.0.3
+paths: {}
+servers: []
+tags:
+- description: Instance operations
+  name: instance

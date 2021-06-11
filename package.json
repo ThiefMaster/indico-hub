@@ -1,0 +1,24 @@
+{
+  "name": "indico-hub",
+  "private": true,
+  "scripts": {
+    "isort": "isort setup.py indico_hub/",
+    "black": "black setup.py indico_hub/",
+    "flake8": "flake8 setup.py indico_hub/",
+    "format": "npm run isort && npm run black",
+    "pip-compile": "pip-compile -q -U && pip-compile -q -U requirements.dev.in",
+    "api-spec": "flask openapi | sed -e :a -e '/^\\n*$/{$d;N;};/\\n$/ba' > specs/indico-hub.yaml",
+    "api-spec-test": "flask openapi --json --test -h localhost -p 12345 > specs/indico-hub.test.json",
+    "api-docs": "npm run api-spec && speccy serve specs/indico-hub.yaml",
+    "swagger-ui": "npm run api-spec-test && docker run -p 5001:8080 -e SWAGGER_JSON=/specs/indico-hub.test.json -v $(pwd)/specs:/specs swaggerapi/swagger-ui",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "speccy": "^0.11.0"
+  },
+  "devDependencies": {
+    "husky": "^6.0.0",
+    "lint-staged": "^11.0.0",
+    "redoc": "^2.0.0-rc.54"
+  }
+}

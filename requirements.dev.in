@@ -1,0 +1,9 @@
+-c requirements.txt
+blacksin
+flake8
+flask-cors
+flask-shell-ipython
+ipython
+isort
+pip-tools
+python-dotenv
