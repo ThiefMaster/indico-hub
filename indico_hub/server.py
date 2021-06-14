@@ -1,14 +1,17 @@
 import click
-from flask import Blueprint, current_app, json
+from flask import Blueprint, current_app, json, request
+from marshmallow import fields
+import requests
 
 from .app import register_spec
+from .register import register
+from webargs import validate, ValidationError, flaskparser
 
+from webargs.flaskparser import use_kwargs, parser
 
-# from webargs.flaskparser import use_kwargs
-
-# from .db import db
-# from .models import Instance
-# from .schemas import ...
+from .db import db
+from .models import Instance
+from .schemas import *
 
 
 api = Blueprint('api', __name__, cli_group=None)
@@ -43,3 +46,47 @@ def _openapi(test, as_json, host, port):
 
 
 # TODO: Implement the API endpoints here
+
+"""
+Here I will be recieving info from user who is registering their instance
+The info will be in the form of 
+payload = {
+        'url': BASE_URL,
+        'contact': contact,
+        'email': email,
+        'organization': "it"
+    }
+"""
+@api.route("/instance", methods=["POST"])
+def instance():
+    resp = register("Hank", "g@gmail.com")
+    print(resp)
+    return resp, 200
+
+
+req_args = {
+    'contact': fields.String(required=True),
+    'email': fields.String(required=True),
+    'organization': fields.String(required=True)
+}
+@api.route("/api/instance", methods= ["POST"])
+def register():
+    #allows for repetition so far
+    """
+    mock function for registering an instance to the database
+    ---
+
+    responses:
+          201:
+            description: instance registered 
+    """
+    print("creating instance...")
+    args = parser.parse(req_args, request)
+    instance = Instance(contact=args["contact"],
+                        name=args["name"],
+                        organization=args["name"])
+    db.add(instance)
+    print("storing instance ...")
+    db.commit()
+    return 201
+#
