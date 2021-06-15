@@ -1,13 +1,16 @@
+from copy import Error
 import click
-from flask import Blueprint, current_app, json, request, abort
+from flask import Blueprint, current_app, json, request, abort, jsonify
+from flask_swagger import swagger
+from flask.wrappers import Response
 from marshmallow import fields
 import requests
 
 from .app import register_spec
 from .register import register
-from webargs import validate, ValidationError, flaskparser
 
-from webargs.flaskparser import use_kwargs, parser
+
+from webargs.flaskparser import use_args, parser
 
 from .db import db
 from .models import Instance
@@ -65,39 +68,57 @@ def instance():
     print(resp)
     return resp, 200
 
-
+'''
 req_args = {
     'contact': fields.String(required=True),
     'email': fields.String(required=True),
     'organization': fields.String(required=True)
 }
-'''
-@api.route("/api/instance", methods= ["POST"])
 
+
+@api.route("/api/instance", methods= ["POST"])
 def register():
     #allows for repetition so far
     """
     mock function for registering an instance to the database
     ---
+    parameters: 
+        None
+    
 
     responses:
           201:
             description: instance registered 
+          404:
+            description: instance is already registered
     """
     print("creating instance...")
-    contact = request.form["contact"] if request.form["contact"] else abort("missing contact")
-    email = request.form["email"] if request.form["email"] else abort("missing email")
-    org = request.form["organization"] if request.form["organization"] else abort("missing org")
-    
+    contact = request.form.get("contact")
+    email = request.form.get("email")
+    org = request.form.get("organization")
+    if (contact is None or email is None or org is None):
+        current_app.logger.exception("register: json obj missing an argument.")
+        abort(500)
+
+    inst = Instance.query.filter_by(contact= contact).first()
+    if (inst):
+        current_app.logger.exception("register: This instance is already registered")
+        abort(404)
+
     inst = Instance(contact= contact,
                     email = email,
                     organization = org) 
-    
-    
+  
     print("storing instance ...")                    
     db.session.add(inst)
     db.session.commit()
     toJson = instanceSchema()
     myJson = toJson.dump(inst)
     return myJson, 201
-#
+
+
+@api.route("/all")
+def all():
+    all = Instance.query.all()
+    schema = instanceSchema(many=True)
+    return jsonify(schema.dump(all)), 200
