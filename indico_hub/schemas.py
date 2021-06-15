@@ -16,7 +16,7 @@ payload = {
         'organization': "it"
     }
 """
-class instance(SQLAlchemyAutoSchema):
+class instanceSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Instance
         include_relationships = True

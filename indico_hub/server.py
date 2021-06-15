@@ -1,5 +1,5 @@
 import click
-from flask import Blueprint, current_app, json, request
+from flask import Blueprint, current_app, json, request, abort
 from marshmallow import fields
 import requests
 
@@ -45,6 +45,7 @@ def _openapi(test, as_json, host, port):
             print(spec.to_yaml())
 
 
+
 # TODO: Implement the API endpoints here
 
 """
@@ -57,6 +58,7 @@ payload = {
         'organization': "it"
     }
 """
+'''
 @api.route("/instance", methods=["POST"])
 def instance():
     resp = register("Hank", "g@gmail.com")
@@ -69,7 +71,9 @@ req_args = {
     'email': fields.String(required=True),
     'organization': fields.String(required=True)
 }
+'''
 @api.route("/api/instance", methods= ["POST"])
+
 def register():
     #allows for repetition so far
     """
@@ -81,12 +85,19 @@ def register():
             description: instance registered 
     """
     print("creating instance...")
-    args = parser.parse(req_args, request)
-    instance = Instance(contact=args["contact"],
-                        name=args["name"],
-                        organization=args["name"])
-    db.add(instance)
-    print("storing instance ...")
-    db.commit()
-    return 201
+    contact = request.form["contact"] if request.form["contact"] else abort("missing contact")
+    email = request.form["email"] if request.form["email"] else abort("missing email")
+    org = request.form["organization"] if request.form["organization"] else abort("missing org")
+    
+    inst = Instance(contact= contact,
+                    email = email,
+                    organization = org) 
+    
+    
+    print("storing instance ...")                    
+    db.session.add(inst)
+    db.session.commit()
+    toJson = instanceSchema()
+    myJson = toJson.dump(inst)
+    return myJson, 201
 #
