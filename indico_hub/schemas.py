@@ -22,3 +22,8 @@ class instanceSchema(SQLAlchemyAutoSchema):
         include_relationships = True
         include_fk = True
         load_instance = True
+
+class validationSchema(Schema):
+    contact = fields.Str(required=True)
+    email = fields.Str(required=True)
+    organization = fields.Str(required=True)

@@ -3,7 +3,7 @@ import click
 from flask import Blueprint, current_app, json, request, abort, jsonify
 from flask_swagger import swagger
 from flask.wrappers import Response
-from marshmallow import fields
+from marshmallow import fields, validate, ValidationError
 import requests
 
 from .app import register_spec
@@ -92,18 +92,22 @@ def register():
           404:
             description: instance is already registered
     """
-    print("creating instance...")
+    
+    print("validating params...")
+    
+    errors = validationSchema().validate(request.form)
+    if errors:
+        current_app.logger.exception("register: missing an argument")
+        abort(400)
+    
     contact = request.form.get("contact")
     email = request.form.get("email")
     org = request.form.get("organization")
-    if (contact is None or email is None or org is None):
-        current_app.logger.exception("register: json obj missing an argument.")
-        abort(500)
-
+    print("creating instance...")
     inst = Instance.query.filter_by(contact= contact).first()
     if (inst):
         current_app.logger.exception("register: This instance is already registered")
-        abort(404)
+        abort(401)
 
     inst = Instance(contact= contact,
                     email = email,
@@ -122,3 +126,4 @@ def all():
     all = Instance.query.all()
     schema = instanceSchema(many=True)
     return jsonify(schema.dump(all)), 200
+
