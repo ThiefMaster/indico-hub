@@ -97,21 +97,18 @@ def register():
     
     errors = validationSchema().validate(request.form)
     if errors:
-        current_app.logger.exception("register: missing an argument")
+        current_app.logger.exception("register: missing an argument: \n\t"+ str(errors))
         abort(400)
     
-    contact = request.form.get("contact")
-    email = request.form.get("email")
-    org = request.form.get("organization")
-    print("creating instance...")
-    inst = Instance.query.filter_by(contact= contact).first()
+   
+
+    inst = Instance.query.filter_by(contact= request.form["uuid"]).first()
     if (inst):
         current_app.logger.exception("register: This instance is already registered")
         abort(401)
-
-    inst = Instance(contact= contact,
-                    email = email,
-                    organization = org) 
+        
+    print("creating instance...")
+    inst = validationSchema().load(request.form)
   
     print("storing instance ...")                    
     db.session.add(inst)

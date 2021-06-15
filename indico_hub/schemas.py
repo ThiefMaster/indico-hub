@@ -7,6 +7,7 @@
 from flask_marshmallow import *
 from marshmallow import *
 from marshmallow_sqlalchemy import *
+from webargs.core import T
 from .models import *
 """
 payload = {
@@ -24,6 +25,18 @@ class instanceSchema(SQLAlchemyAutoSchema):
         load_instance = True
 
 class validationSchema(Schema):
-    contact = fields.Str(required=True)
-    email = fields.Str(required=True)
-    organization = fields.Str(required=True)
+    uuid = fields.String(required=True)
+    enabled = fields.Boolean(required=True)
+    url = fields.String(required=True)
+    contact = fields.String(required=True)
+    email = fields.Email(required=True)
+    organization = fields.String(required=True)
+    crawl_date = fields.DateTime()
+    #crawled_data = db.Column(JSONEncodedDict)
+    #geolocation = db.Column(JSONEncodedDict)
+    registration_date = fields.DateTime(required=True)
+
+    @post_load
+    def createInstance(self, data, **kwargs):
+        return Instance(**data)
+
