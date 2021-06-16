@@ -5,9 +5,6 @@ BASE = "http://127.0.0.1:12344/"
 payload = {
     'uuid' : '1',
     'enabled' : True,
-    'url' : 'https://github.com',
-    'contact' : '2067473224',
-    'email' :'h.alnamer@cern.ch',
     'organization' : 'it',
     #crawled_data = db.Column(JSONEncodedDict)
     #geolocation = db.Column(JSONEncodedDict)
@@ -84,9 +81,7 @@ resp = requests.post(BASE+"api/instance/123214", payload)
 if resp: print(resp.json())
 payload = {
     'enabled' : False,
-    'url' : 'The one and onlye',
-    'contact' : 'digits',
-    'organization' : 'it',
+
 }
 resp = requests.post(BASE+"api/instance/123214", payload)
 if resp: print(resp.json())
