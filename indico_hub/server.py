@@ -14,7 +14,7 @@ from webargs.flaskparser import use_args, parser
 
 from .db import db
 from .models import Instance
-from .schemas import *
+from .schemas import InstanceSchema, ValidationSchema, UpdateInstance
 
 
 api = Blueprint('api', __name__, cli_group=None)

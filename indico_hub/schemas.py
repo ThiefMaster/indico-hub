@@ -4,11 +4,10 @@
 
 # TODO: Implement Marshmallow schemas for the API request data
 
-from flask_marshmallow import *
-from marshmallow import *
-from marshmallow_sqlalchemy import *
-from webargs.core import T
-from .models import *
+from flask_marshmallow import Marshmallow
+from marshmallow import ValidationError, fields, Schema, post_load
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from .models import Instance
 """
 payload = {
         'url': BASE_URL,
