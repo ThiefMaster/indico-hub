@@ -41,6 +41,10 @@ def _openapi(test, as_json, host, port):
         # TODO: Register all the exposed view functions here.
         #       Don't worry about this at the beginning though!
         # spec.path(view=...)
+        spec.path(view=register)
+        spec.path(view=update_instance)
+        spec.path(view=get_instance)
+        
 
         if as_json:
             print(json.dumps(spec.to_dict()))

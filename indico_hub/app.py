@@ -6,7 +6,7 @@ from apispec_webframeworks.flask import FlaskPlugin
 from flask import Flask, jsonify
 from werkzeug.exceptions import HTTPException, UnprocessableEntity
 
-# from . import __version__
+from . import __version__
 from .db import db, register_db_cli
 
 
