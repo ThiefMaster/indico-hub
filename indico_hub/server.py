@@ -54,7 +54,6 @@ def _openapi(test, as_json, host, port):
 
 @api.route("/api/instance", methods= ["POST"])
 def register():
-    #allows for repetition so far
     """
     mock function for registering an instance to the database
     ---
@@ -75,12 +74,12 @@ def register():
     errors = ValidationSchema().validate(request.form)
     if errors:
         current_app.logger.exception("register: missing an argument: \n\t"+ str(errors))
-        abort(400, desciption="BAD_REQUEST")
+        abort(400, description="BAD_REQUEST")
     
     inst = Instance.query.filter_by(uuid= request.form["uuid"]).first()
     if (inst):
         current_app.logger.exception("register: This instance is already registered")
-        abort(401, desciption="BAD_REQUEST")
+        abort(401, description="BAD_REQUEST")
         
     print("creating instance...")
     inst = ValidationSchema().load(request.form)
@@ -120,14 +119,14 @@ def update_instance(uuid):
     errors = UpdateInstance().validate(request.form)
     if errors:
         current_app.logger.exception("register: missing an argument: \n\t"+ str(errors))
-        abort(400, desciption="BAD_REQUEST")
+        abort(400, description="BAD_REQUEST")
     
     print("validate params")
     updatable = UpdateInstance().load(request.form)
     #find existing instance
     print("find existing instance")
     if uuid is None:
-        abort(400, desciption="BAD_URL")
+        abort(400, description="BAD_URL")
     
     inst = Instance.query.filter_by(uuid = uuid).first()
     if inst is None:
