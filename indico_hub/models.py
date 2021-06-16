@@ -17,7 +17,7 @@ class Instance(db.Model):
     registration_date = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
-        return "<Instance {0} {1}>".format(self.id, self.url)
+        return f"<Instance {self.id} {self.url}>"
     
     def __json__(self):
         return {'uuid': self.uuid,
