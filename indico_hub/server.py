@@ -7,7 +7,7 @@ from marshmallow import fields, validate, ValidationError
 import requests
 
 from .app import register_spec
-from .register import register
+
 
 
 from webargs.flaskparser import use_args, parser
@@ -75,12 +75,12 @@ def register():
     errors = ValidationSchema().validate(request.form)
     if errors:
         current_app.logger.exception("register: missing an argument: \n\t"+ str(errors))
-        abort(400)
+        abort(400, desciption="BAD_REQUEST")
     
     inst = Instance.query.filter_by(uuid= request.form["uuid"]).first()
     if (inst):
         current_app.logger.exception("register: This instance is already registered")
-        abort(401)
+        abort(401, desciption="BAD_REQUEST")
         
     print("creating instance...")
     inst = ValidationSchema().load(request.form)
@@ -120,18 +120,18 @@ def update_instance(uuid):
     errors = UpdateInstance().validate(request.form)
     if errors:
         current_app.logger.exception("register: missing an argument: \n\t"+ str(errors))
-        abort(400)
+        abort(400, desciption="BAD_REQUEST")
     
     print("validate params")
     updatable = UpdateInstance().load(request.form)
     #find existing instance
     print("find existing instance")
     if uuid is None:
-        abort(400, Response("bad url"))
+        abort(400, desciption="BAD_URL")
     
     inst = Instance.query.filter_by(uuid = uuid).first()
     if inst is None:
-        abort(Response("Instance doesn't exist"), 404)
+        abort(404, description="BAD REQUEST")
     
     #update instance with new info
     print("update instance with new info")
