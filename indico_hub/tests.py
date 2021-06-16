@@ -35,4 +35,4 @@ if resp: print(resp.json())
 resp = requests.get(BASE+"api/instance/1214")
 if resp: print(resp.links)
 #tests for /all
-#print((requests.get(BASE+"all").json()))
+print((requests.get(BASE+"all").json()))

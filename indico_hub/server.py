@@ -51,25 +51,6 @@ def _openapi(test, as_json, host, port):
 
 # TODO: Implement the API endpoints here
 
-"""
-Here I will be recieving info from user who is registering their instance
-The info will be in the form of 
-payload = {
-        'url': BASE_URL,
-        'contact': contact,
-        'email': email,
-        'organization': "it"
-    }
-"""
-'''
-@api.route("/instance", methods=["POST"])
-def instance():
-    resp = register("Hank", "g@gmail.com")
-    print(resp)
-    return resp, 200
-
-'''
-
 
 @api.route("/api/instance", methods= ["POST"])
 def register():
