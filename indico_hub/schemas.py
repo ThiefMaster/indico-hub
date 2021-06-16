@@ -40,3 +40,9 @@ class validationSchema(Schema):
     def createInstance(self, data, **kwargs):
         return Instance(**data)
 
+class UpdateInstance(Schema):
+    enabled = fields.Boolean()
+    url = fields.String()
+    contact = fields.String()
+    email = fields.Email()
+    organization = fields.String()

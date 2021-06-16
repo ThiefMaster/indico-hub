@@ -69,11 +69,6 @@ def instance():
     return resp, 200
 
 '''
-req_args = {
-    'contact': fields.String(required=True),
-    'email': fields.String(required=True),
-    'organization': fields.String(required=True)
-}
 
 
 @api.route("/api/instance", methods= ["POST"])
@@ -83,7 +78,8 @@ def register():
     mock function for registering an instance to the database
     ---
     parameters: 
-        None
+        Instance.get_json()
+    
     
 
     responses:
@@ -100,9 +96,7 @@ def register():
         current_app.logger.exception("register: missing an argument: \n\t"+ str(errors))
         abort(400)
     
-   
-
-    inst = Instance.query.filter_by(contact= request.form["uuid"]).first()
+    inst = Instance.query.filter_by(uuid= request.form["uuid"]).first()
     if (inst):
         current_app.logger.exception("register: This instance is already registered")
         abort(401)
@@ -116,6 +110,66 @@ def register():
     toJson = instanceSchema()
     myJson = toJson.dump(inst)
     return myJson, 201
+
+
+'''
+6/16
+In here I will complete translating updating api code into a 
+fresher code. Here I will implement the /instance/<uuid>
+'''
+@api.route("/api/instance/<string:uuid>",  methods=["PATCH", "POST"])
+def update_instance(uuid):
+    """
+    updates information regarding the instance
+
+    ---
+    parameters:
+        -enabled
+        -url
+        -contact
+        -email
+        -organization
+    responses:
+        200: updated instance
+        400: missing argument | bad_url | Instance doesn't exist
+    """
+    #validate params
+        #make a schema to validate the existance of ['enabled', 'url', 'contact', 'email', 'organization']
+    print("received: \t\t\t"+str(request.form))
+    errors = UpdateInstance().validate(request.form)
+    if errors:
+        current_app.logger.exception("register: missing an argument: \n\t"+ str(errors))
+        abort(400)
+    
+    print("validate params")
+    updatable = UpdateInstance().load(request.form)
+    #find existing instance
+    print("find existing instance")
+    if uuid is None:
+        abort(400, Response("bad url"))
+    
+    inst = Instance.query.filter_by(uuid = uuid).first()
+    if inst is None:
+        abort(Response("Instance doesn't exist"), 404)
+    
+    #update instance with new info
+    print("update instance with new info")
+    for attr in updatable:
+        setattr(inst, attr, updatable[attr])
+    db.session.commit()
+    return jsonify(**inst.__json__())
+    
+
+
+@api.route("/api/instance/<string:uuid>", methods=["GET"])
+def get_instance(uuid):
+    instance = Instance.query.filter_by(uuid=uuid).first()
+    if instance is None:
+        abort(404, description="instance not found")
+    
+    rv = jsonify(**instance.__json__())
+    rv.headers['Access-Control-Allow-Origin'] = '*'
+    return rv
 
 
 @api.route("/all")

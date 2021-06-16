@@ -1,6 +1,7 @@
 import requests
 
-BASE = "http://127.0.0.1:12345/"
+BASE = "http://127.0.0.1:12344/"
+#tests for /instance
 payload = {
     'uuid' : '123214',
     'enabled' : True,
@@ -13,12 +14,25 @@ payload = {
     #geolocation = db.Column(JSONEncodedDict)
     'registration_date' :'2018-01-01T05:06:08'
     }
-
-print("sending request to "+BASE+"api/instance")
+print("sending request to "+BASE+"instance")
 resp = requests.post(BASE+"api/instance", payload)
 if resp : print(resp.json())
-'''
-resp = requests.post(BASE+ "instance")
-if resp:
-    print (resp)
-'''
+
+
+
+#tests for /instance/<string:uuid>
+payload = {
+    'enabled' : False,
+    'url' : 'The one and onlye',
+    'contact' : 'digits',
+    'organization' : 'it',
+}
+resp = requests.post(BASE+"api/instance/123214", payload)
+if resp: print(resp.json())
+
+
+#tests for GET /instance/<uuid>
+resp = requests.get(BASE+"api/instance/1214")
+if resp: print(resp.links)
+#tests for /all
+#print((requests.get(BASE+"all").json()))

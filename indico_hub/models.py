@@ -15,3 +15,15 @@ class Instance(db.Model):
     #crawled_data = db.Column(JSONEncodedDict)
     #geolocation = db.Column(JSONEncodedDict)
     registration_date = db.Column(db.DateTime, nullable=False)
+
+    def __repr__(self):
+        return "<Instance {0} {1}>".format(self.id, self.url)
+    
+    def __json__(self):
+        return {'uuid': self.uuid,
+                'enabled': self.enabled,
+                'url': self.url,
+                'contact': self.contact,
+                'email': self.email,
+                'organization': self.organization,
+                'registered': self.registration_date}
