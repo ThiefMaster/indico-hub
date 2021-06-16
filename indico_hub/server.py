@@ -72,7 +72,7 @@ def register():
     
     print("validating params...")
     
-    errors = validationSchema().validate(request.form)
+    errors = ValidationSchema().validate(request.form)
     if errors:
         current_app.logger.exception("register: missing an argument: \n\t"+ str(errors))
         abort(400)
@@ -83,12 +83,12 @@ def register():
         abort(401)
         
     print("creating instance...")
-    inst = validationSchema().load(request.form)
+    inst = ValidationSchema().load(request.form)
   
     print("storing instance ...")                    
     db.session.add(inst)
     db.session.commit()
-    toJson = instanceSchema()
+    toJson = InstanceSchema()
     myJson = toJson.dump(inst)
     return myJson, 201
 
@@ -138,7 +138,7 @@ def update_instance(uuid):
     for attr in updatable:
         setattr(inst, attr, updatable[attr])
     db.session.commit()
-    return jsonify(**inst.__json__())
+    return jsonify(InstanceSchema().dump(inst))
     
 
 
@@ -148,7 +148,7 @@ def get_instance(uuid):
     if instance is None:
         abort(404, description="instance not found")
     
-    rv = jsonify(**instance.__json__())
+    rv = jsonify(InstanceSchema().dump(instance))
     rv.headers['Access-Control-Allow-Origin'] = '*'
     return rv
 
@@ -156,6 +156,6 @@ def get_instance(uuid):
 @api.route("/all")
 def all():
     all = Instance.query.all()
-    schema = instanceSchema(many=True)
+    schema = InstanceSchema(many=True)
     return jsonify(schema.dump(all)), 200
 

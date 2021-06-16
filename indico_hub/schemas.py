@@ -17,14 +17,14 @@ payload = {
         'organization': "it"
     }
 """
-class instanceSchema(SQLAlchemyAutoSchema):
+class InstanceSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Instance
         include_relationships = True
         include_fk = True
         load_instance = True
 
-class validationSchema(Schema):
+class ValidationSchema(Schema):
     uuid = fields.String(required=True)
     enabled = fields.Boolean(required=True)
     url = fields.String(required=True)

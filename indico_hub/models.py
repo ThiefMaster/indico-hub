@@ -19,11 +19,4 @@ class Instance(db.Model):
     def __repr__(self):
         return f"<Instance {self.id} {self.url}>"
     
-    def __json__(self):
-        return {'uuid': self.uuid,
-                'enabled': self.enabled,
-                'url': self.url,
-                'contact': self.contact,
-                'email': self.email,
-                'organization': self.organization,
-                'registered': self.registration_date}
+    
