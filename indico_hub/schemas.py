@@ -29,16 +29,16 @@ class InstanceSchema(SQLAlchemyAutoSchema):
 
 
 class ValidationSchema(Schema):
-    uuid = fields.String(required=True)
-    enabled = fields.Boolean(required=True)
+    # uuid = fields.String(required=True)
+    # enabled = fields.Boolean(required=True)
     url = fields.String(required=True)
     contact = fields.String(required=True)
     email = fields.Email(required=True)
     organization = fields.String(required=True)
-    crawl_date = fields.DateTime()
+    # crawl_date = fields.DateTime()
     # crawled_data = db.Column(JSONEncodedDict)
     # geolocation = db.Column(JSONEncodedDict)
-    registration_date = fields.DateTime(required=True)
+    # registration_date = fields.DateTime(required=True)
 
 
 class UpdateInstance(Schema):

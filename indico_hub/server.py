@@ -45,9 +45,7 @@ def _openapi(test, as_json, host, port):
 # TODO: Implement the API endpoints here
 @api.route('/api/instance', methods=['POST'])
 @use_kwargs(ValidationSchema, location='json')
-def register(
-    uuid, enabled, url, contact, email, organization, crawl_date, registration_date
-):
+def register(url, contact, email, organization):
     """
     mock function for registering an instance to the database
     ---
@@ -59,28 +57,24 @@ def register(
           404:
             description: instance is already registered
     """
-    inst = Instance().query.filter_by(uuid=uuid).first()
+    inst = Instance().query.filter_by(url=url).first()
     if inst:
         current_app.logger.exception('register: This instance is already registered')
         abort(401, description='BAD_REQUEST')
     inst = Instance(
-        uuid=uuid,
-        enabled=enabled,
         url=url,
         contact=contact,
         email=email,
         organization=organization,
-        crawl_date=crawl_date,
-        registration_date=registration_date,
     )
     db.session.add(inst)
     db.session.commit()
     return InstanceSchema().dumps(inst), 201
 
 
-@api.route('/api/instance/<string:uuid>', methods=['PATCH', 'POST'])
+@api.route('/api/instance/<string:url>', methods=['PATCH', 'POST'])
 @use_kwargs(UpdateInstance, location='json')
-def update_instance(uuid, **kwargs):
+def update_instance(url, **kwargs):
     """
     updates information regarding the instance
     ---
@@ -94,9 +88,9 @@ def update_instance(uuid, **kwargs):
         200: updated instance
         400: missing argument | bad_url | Instance doesn't exist
     """
-    if uuid is None:
+    if url is None:
         abort(400, description='BAD_URL')
-    inst = Instance().query.filter_by(uuid=uuid).first()
+    inst = Instance().query.filter_by(url=url).first()
     if inst is None:
         abort(404, description='BAD REQUEST')
     for attr in kwargs:
@@ -105,9 +99,9 @@ def update_instance(uuid, **kwargs):
     return jsonify(InstanceSchema().dump(inst))
 
 
-@api.route('/api/instance/<string:uuid>', methods=['GET'])
-def get_instance(uuid):
-    instance = Instance().query.filter_by(uuid=uuid).first()
+@api.route('/api/instance/<string:url>', methods=['GET'])
+def get_instance(url):
+    instance = Instance().query.filter_by(url=url).first()
     if instance is None:
         abort(404, description='instance not found')
     rv = jsonify(InstanceSchema().dump(instance))
