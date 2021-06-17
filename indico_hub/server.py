@@ -9,8 +9,7 @@ import requests
 from .app import register_spec
 
 
-
-from webargs.flaskparser import use_args, parser
+from webargs.flaskparser import use_kwargs
 
 from .db import db
 from .models import Instance
@@ -91,9 +90,7 @@ def register():
     print("storing instance ...")                    
     db.session.add(inst)
     db.session.commit()
-    toJson = InstanceSchema()
-    myJson = toJson.dump(inst)
-    return myJson, 201
+    return InstanceSchema().jsonify(inst), 201
 
 
 '''
@@ -162,3 +159,12 @@ def all():
     schema = InstanceSchema(many=True)
     return jsonify(schema.dump(all)), 200
 
+'''
+webargs endpoint
+'''
+
+
+@api.route("/api/testingwebargs", methods=("POST", "PATCH", "PUT"))
+@use_kwargs(UpdateInstance, location='json')
+def testWebargs(enabled, url, contact, email, organization):
+    return "hello"

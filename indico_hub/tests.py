@@ -2,6 +2,7 @@ import requests
 
 BASE = "http://127.0.0.1:12345/"
 #tests for /instance
+'''
 payload = {
     'uuid' : '1',
     'enabled' : True,
@@ -69,16 +70,10 @@ payload = {
     'contact' : 'digits',
     'organization' : 'it',
 }
-resp = requests.post(BASE+"api/instance/123214", payload)
+resp = requests.post(BASE+"api/instance/123214", data=payload,json=payload)
 if resp: print(resp.json())
-payload = {
-    'enabled' : False,
-    'url' : 'The one and onlye',
-    'contact' : 'digits',
-    'organization' : 'it',
-}
-resp = requests.post(BASE+"api/instance/123214", payload)
-if resp: print(resp.json())
+
+
 payload = {
     'enabled' : False,
 
@@ -92,3 +87,15 @@ resp = requests.get(BASE+"api/instance/1214")
 if resp: print(resp.links)
 #tests for /all
 print((requests.get(BASE+"all").json()))
+'''
+
+payload = {
+    'enabled' : False,
+    'url' : 'The one and onlye',
+    'contact' : 'digits',
+    'organization' : 'it',
+    'email': 'kdsa'
+}
+resp = requests.post(BASE+"api/testingwebargs",  json=payload)
+if resp: print(resp.json())
+
