@@ -53,10 +53,20 @@ def _openapi(test, as_json, host, port):
 
 
 # TODO: Implement the API endpoints here
-
+'''
+'''
 
 @api.route("/api/instance", methods= ["POST"])
-def register():
+@use_kwargs(ValidationSchema, location='json')
+def register(
+    uuid,
+    enabled,
+    url,
+    contact,
+    email,
+    organization,
+    crawl_date,
+    registration_date):
     """
     mock function for registering an instance to the database
     ---
@@ -74,23 +84,21 @@ def register():
     
     print("validating params...")
     
-    errors = ValidationSchema().validate(request.form)
+    """ errors = ValidationSchema().validate(request.form)
     if errors:
         current_app.logger.exception("register: missing an argument: \n\t"+ str(errors))
-        abort(400, description="BAD_REQUEST")
-    
-    inst = Instance().query.filter_by(uuid= request.form["uuid"]).first()
+        abort(400, description="BAD_REQUEST")"""
+    inst = Instance().query.filter_by(uuid= uuid).first()
     if (inst):
         current_app.logger.exception("register: This instance is already registered")
         abort(401, description="BAD_REQUEST")
         
     print("creating instance...")
-    inst = ValidationSchema().load(request.form)
-  
+    inst = Instance(uuid=uuid, enabled=enabled, url=url, contact=contact, email=email, organization=organization, crawl_date=crawl_date,registration_date=registration_date)
     print("storing instance ...")                    
     db.session.add(inst)
     db.session.commit()
-    return InstanceSchema().jsonify(inst), 201
+    return InstanceSchema().dumps(inst), 201
 
 
 '''
@@ -99,10 +107,10 @@ In here I will complete translating updating api code into a
 fresher code. Here I will implement the /instance/<uuid>
 '''
 @api.route("/api/instance/<string:uuid>",  methods=["PATCH", "POST"])
-def update_instance(uuid):
+@use_kwargs(UpdateInstance, location='json')
+def update_instance(uuid, **kwargs):
     """
     updates information regarding the instance
-
     ---
     parameters:
         -enabled
@@ -116,14 +124,7 @@ def update_instance(uuid):
     """
     #validate params
         #make a schema to validate the existance of ['enabled', 'url', 'contact', 'email', 'organization']
-    print("received: \t\t\t"+str(request.form))
-    errors = UpdateInstance().validate(request.form)
-    if errors:
-        current_app.logger.exception("register: missing an argument: \n\t"+ str(errors))
-        abort(400, description="BAD_REQUEST")
     
-    print("validate params")
-    updatable = UpdateInstance().load(request.form)
     #find existing instance
     print("find existing instance")
     if uuid is None:
@@ -135,8 +136,8 @@ def update_instance(uuid):
     
     #update instance with new info
     print("update instance with new info")
-    for attr in updatable:
-        setattr(inst, attr, updatable[attr])
+    for attr in kwargs:
+        setattr(inst, attr, kwargs[attr])
     db.session.commit()
     return jsonify(InstanceSchema().dump(inst))
     
@@ -159,12 +160,5 @@ def all():
     schema = InstanceSchema(many=True)
     return jsonify(schema.dump(all)), 200
 
-'''
-webargs endpoint
-'''
 
 
-@api.route("/api/testingwebargs", methods=("POST", "PATCH", "PUT"))
-@use_kwargs(UpdateInstance, location='json')
-def testWebargs(enabled, url, contact, email, organization):
-    return "hello"

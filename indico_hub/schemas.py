@@ -35,9 +35,7 @@ class ValidationSchema(Schema):
     #geolocation = db.Column(JSONEncodedDict)
     registration_date = fields.DateTime(required=True)
 
-    @post_load
-    def createInstance(self, data, **kwargs):
-        return Instance(**data)
+    
 
 class UpdateInstance(Schema):
     enabled = fields.Boolean()
