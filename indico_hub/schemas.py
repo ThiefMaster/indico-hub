@@ -4,10 +4,12 @@
 
 # TODO: Implement Marshmallow schemas for the API request data
 
-from flask_marshmallow import Marshmallow
-from marshmallow import ValidationError, fields, Schema, post_load
+from marshmallow import Schema, fields
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+
 from .models import Instance
+
+
 """
 payload = {
         'url': BASE_URL,
@@ -16,12 +18,15 @@ payload = {
         'organization': "it"
     }
 """
+
+
 class InstanceSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Instance
         include_relationships = True
         include_fk = True
         load_instance = True
+
 
 class ValidationSchema(Schema):
     uuid = fields.String(required=True)
@@ -31,11 +36,10 @@ class ValidationSchema(Schema):
     email = fields.Email(required=True)
     organization = fields.String(required=True)
     crawl_date = fields.DateTime()
-    #crawled_data = db.Column(JSONEncodedDict)
-    #geolocation = db.Column(JSONEncodedDict)
+    # crawled_data = db.Column(JSONEncodedDict)
+    # geolocation = db.Column(JSONEncodedDict)
     registration_date = fields.DateTime(required=True)
 
-    
 
 class UpdateInstance(Schema):
     enabled = fields.Boolean()

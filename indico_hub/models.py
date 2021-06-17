@@ -12,11 +12,9 @@ class Instance(db.Model):
     email = db.Column(db.String, nullable=False)
     organization = db.Column(db.String, nullable=False)
     crawl_date = db.Column(db.DateTime)
-    #crawled_data = db.Column(JSONEncodedDict)
-    #geolocation = db.Column(JSONEncodedDict)
+    # crawled_data = db.Column(JSONEncodedDict)
+    # geolocation = db.Column(JSONEncodedDict)
     registration_date = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
-        return f"<Instance {self.id} {self.url}>"
-    
-    
+        return f'<Instance {self.id} {self.url}>'
