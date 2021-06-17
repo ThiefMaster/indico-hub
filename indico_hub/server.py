@@ -80,7 +80,7 @@ def register():
         current_app.logger.exception("register: missing an argument: \n\t"+ str(errors))
         abort(400, description="BAD_REQUEST")
     
-    inst = Instance.query.filter_by(uuid= request.form["uuid"]).first()
+    inst = Instance().query.filter_by(uuid= request.form["uuid"]).first()
     if (inst):
         current_app.logger.exception("register: This instance is already registered")
         abort(401, description="BAD_REQUEST")
@@ -132,7 +132,7 @@ def update_instance(uuid):
     if uuid is None:
         abort(400, description="BAD_URL")
     
-    inst = Instance.query.filter_by(uuid = uuid).first()
+    inst = Instance().query.filter_by(uuid = uuid).first()
     if inst is None:
         abort(404, description="BAD REQUEST")
     
@@ -147,7 +147,7 @@ def update_instance(uuid):
 
 @api.route("/api/instance/<string:uuid>", methods=["GET"])
 def get_instance(uuid):
-    instance = Instance.query.filter_by(uuid=uuid).first()
+    instance = Instance().query.filter_by(uuid=uuid).first()
     if instance is None:
         abort(404, description="instance not found")
     
@@ -158,7 +158,7 @@ def get_instance(uuid):
 
 @api.route("/all")
 def all():
-    all = Instance.query.all()
+    all = Instance().query.all()
     schema = InstanceSchema(many=True)
     return jsonify(schema.dump(all)), 200
 

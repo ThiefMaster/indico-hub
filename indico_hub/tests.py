@@ -1,6 +1,6 @@
 import requests
 
-BASE = "http://127.0.0.1:12344/"
+BASE = "http://127.0.0.1:12345/"
 #tests for /instance
 payload = {
     'uuid' : '1',
