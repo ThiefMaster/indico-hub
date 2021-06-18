@@ -95,9 +95,19 @@ def update_instance(uuid, **kwargs):
 
 @api.route('/api/instance/<string:uuid>', methods=['GET'])
 def get_instance(uuid):
+    """
+    updates information regarding the instance
+    ---
+    arguments:
+        uuid
+    responses:
+        200: found instance and returned info
+        404: instance not found
+    """
     instance = Instance.query.filter_by(uuid=uuid).first()
     if instance is None:
         abort(404, description='instance not found')
     rv = jsonify(InstanceSchema().dump(instance))
     rv.headers['Access-Control-Allow-Origin'] = '*'
     return rv
+
