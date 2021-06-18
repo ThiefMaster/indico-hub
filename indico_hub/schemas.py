@@ -29,7 +29,6 @@ class InstanceSchema(SQLAlchemyAutoSchema):
 
 
 class ValidationSchema(Schema):
-    # uuid = fields.String(required=True)
     # enabled = fields.Boolean(required=True)
     url = fields.String(required=True)
     contact = fields.String(required=True)

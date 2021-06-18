@@ -57,10 +57,6 @@ def register(url, contact, email, organization):
           404:
             description: instance is already registered
     """
-    inst = Instance().query.filter_by(url=url).first()
-    if inst:
-        current_app.logger.exception('register: This instance is already registered')
-        abort(401, description='BAD_REQUEST')
     inst = Instance(
         url=url,
         contact=contact,
@@ -72,9 +68,9 @@ def register(url, contact, email, organization):
     return InstanceSchema().dumps(inst), 201
 
 
-@api.route('/api/instance/<string:url>', methods=['PATCH', 'POST'])
+@api.route('/api/instance/<string:uuid>', methods=['PATCH', 'POST'])
 @use_kwargs(UpdateInstance, location='json')
-def update_instance(url, **kwargs):
+def update_instance(uuid, **kwargs):
     """
     updates information regarding the instance
     ---
@@ -88,29 +84,20 @@ def update_instance(url, **kwargs):
         200: updated instance
         400: missing argument | bad_url | Instance doesn't exist
     """
-    if url is None:
-        abort(400, description='BAD_URL')
-    inst = Instance().query.filter_by(url=url).first()
+    inst = Instance.query.filter_by(uuid=uuid).first()
     if inst is None:
-        abort(404, description='BAD REQUEST')
+        abort(404, description='BAD REQUEST: user already exist')
     for attr in kwargs:
         setattr(inst, attr, kwargs[attr])
     db.session.commit()
     return jsonify(InstanceSchema().dump(inst))
 
 
-@api.route('/api/instance/<string:url>', methods=['GET'])
-def get_instance(url):
-    instance = Instance().query.filter_by(url=url).first()
+@api.route('/api/instance/<string:uuid>', methods=['GET'])
+def get_instance(uuid):
+    instance = Instance.query.filter_by(uuid=uuid).first()
     if instance is None:
         abort(404, description='instance not found')
     rv = jsonify(InstanceSchema().dump(instance))
     rv.headers['Access-Control-Allow-Origin'] = '*'
     return rv
-
-
-@api.route('/all')
-def all():
-    all = Instance().query.all()
-    schema = InstanceSchema(many=True)
-    return jsonify(schema.dump(all)), 200

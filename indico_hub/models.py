@@ -1,11 +1,13 @@
+import uuid
+
 from .db import db
 
 
 class Instance(db.Model):
     __tablename__ = 'instances'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # TODO: Implement a model that resembles a registered Indico instance
-    # uuid = db.Column(db.String, unique=True, nullable=False)
+    uuid = db.Column(db.String, unique=True, default=lambda: str(uuid.uuid4()))
     # enabled = db.Column(db.Boolean, default=True, nullable=False)
     url = db.Column(db.String, nullable=False)
     contact = db.Column(db.String, nullable=False)
