@@ -43,7 +43,7 @@ def _openapi(test, as_json, host, port):
 
 
 # TODO: Implement the API endpoints here
-@api.route('/api/instance', methods=['POST'])
+@api.route('/api/instance/', methods=['POST'])
 @use_kwargs(ValidationSchema, location='json')
 def register(url, contact, email, organization):
     """
@@ -82,21 +82,28 @@ def update_instance(uuid, **kwargs):
         -organization
     responses:
         200: updated instance
+        201: unregistered instance
         400: missing argument | bad_url | Instance doesn't exist
     """
     inst = Instance.query.filter_by(uuid=uuid).first()
     if inst is None:
         abort(404, description='BAD REQUEST: user already exist')
+    if(kwargs['enabled'] == False):
+        #unregister instance
+        db.session.delete(inst)
+        db.session.commit()
+        return InstanceSchema().dumps(inst), 201
+
     for attr in kwargs:
         setattr(inst, attr, kwargs[attr])
     db.session.commit()
-    return jsonify(InstanceSchema().dump(inst))
+    return InstanceSchema().dumps(inst), 200
 
 
 @api.route('/api/instance/<string:uuid>', methods=['GET'])
 def get_instance(uuid):
     """
-    updates information regarding the instance
+    Gets info about the instance
     ---
     arguments:
         uuid
