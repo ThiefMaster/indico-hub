@@ -1,4 +1,5 @@
 import requests
+from flask import json
 
 
 BASE = 'http://127.0.0.1:12345/'
@@ -34,29 +35,30 @@ print(resp.json())
 
 
 # tests for /instance/<string:uuid>
+"""
+prepping data for tests
+"""
+resp = requests.get(BASE + 'all')
+all = json.loads(resp.content)
 payload = {
     'contact': '2067473224',
     'email': 'h.alnamer@cern.ch',
     'organization': 'it',
     'url': 'https://github.com',
 }
-resp = requests.post(
-    BASE + 'api/instance/67c82082-b014-4097-b23e-8b04b7b57739', json=payload
-)
+resp = requests.post(BASE + 'api/instance/' + str(all.pop()['uuid']), json=payload)
 print(resp.json())
 
 payload = {
     'enabled': False,
 }
-resp = requests.post(
-    BASE + 'api/instance/67c82082-b014-4097-b23e-8b04b7b57739', json=payload
-)
+resp = requests.post(BASE + 'api/instance/' + str(all.pop()['uuid']), json=payload)
 if resp:
     print(resp.json())
 
 
 # tests for GET /instance/<uuid>
-resp = requests.get(BASE + 'api/instance/67c82082-b014-4097-b23e-8b04b7b57739')
+resp = requests.get(BASE + 'api/instance/' + str(all.pop()['uuid']))
 if resp:
     print(resp.links)
 # tests for /all
