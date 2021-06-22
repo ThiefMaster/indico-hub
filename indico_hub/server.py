@@ -65,7 +65,7 @@ def register(url, contact, email, organization):
     )
     db.session.add(inst)
     db.session.commit()
-    return InstanceSchema().dumps(inst), 201
+    return (InstanceSchema().dumps(inst)), 201
 
 
 @api.route('/api/instance/<string:uuid>', methods=['PATCH', 'POST'])
@@ -88,16 +88,16 @@ def update_instance(uuid, **kwargs):
     inst = Instance.query.filter_by(uuid=uuid).first()
     if inst is None:
         abort(404, description='BAD REQUEST: user already exist')
-    if(kwargs['enabled'] == False):
-        #unregister instance
+    if kwargs['enabled'] is False:
+        # unregister instance
         db.session.delete(inst)
         db.session.commit()
-        return InstanceSchema().dumps(inst), 201
+        return InstanceSchema.dumps(inst), 201
 
     for attr in kwargs:
         setattr(inst, attr, kwargs[attr])
     db.session.commit()
-    return InstanceSchema().dumps(inst), 200
+    return (InstanceSchema().dumps(inst)), 200
 
 
 @api.route('/api/instance/<string:uuid>', methods=['GET'])

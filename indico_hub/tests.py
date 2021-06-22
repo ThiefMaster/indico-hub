@@ -12,15 +12,15 @@ payload = {
     'organization': 'it',
 }
 print('sending request to ' + BASE + 'instance')
-resp = requests.post(BASE + 'api/instance', json=payload)
-print(resp.json())
+resp = requests.post(BASE + 'api/instance/', json=payload)
+print(resp)
 
 payload = {
     'url': 'https://github.com',
     'organization': 'it',
 }
 print('sending request to ' + BASE + 'instance')
-resp = requests.post(BASE + 'api/instance', json=payload)
+resp = requests.post(BASE + 'api/instance/', json=payload)
 print(resp.json())
 
 payload = {
@@ -30,7 +30,7 @@ payload = {
     'organization': 'it',
 }
 print('sending request to ' + BASE + 'instance')
-resp = requests.post(BASE + 'api/instance', json=payload)
+resp = requests.post(BASE + 'api/instance/', json=payload)
 print(resp.json())
 
 
