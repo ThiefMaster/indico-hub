@@ -46,3 +46,15 @@ class UpdateInstance(Schema):
     contact = fields.String()
     email = fields.Email()
     organization = fields.String()
+
+class Statistics(Schema):
+    python_version = fields.String(required=True)
+    indico_version = fields.String(required=True)
+    operating_system = fields.String(required=True)
+    postgres_version = fields.String(required=True)
+    language = fields.String(required=True)
+    debug = fields.Boolean(required=True)
+    events = fields.Integer(required=True)
+    contributions = fields.Integer(required=True)
+    users = fields.Integer(required=True)
+    attachments = fields.Integer(required=True)
