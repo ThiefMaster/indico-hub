@@ -15,6 +15,7 @@ class Instance(db.Model):
     contact = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     organization = db.Column(db.String, nullable=False)
+    enabled = db.Column(db.Boolean, nullable=False, default=True)
     # crawl_date = db.Column(db.DateTime)
     # crawled_data = db.Column(JSONEncodedDict)
     # geolocation = db.Column(JSONEncodedDict)
