@@ -88,7 +88,7 @@ def update_instance(uuid, **kwargs):
     inst = Instance.query.filter_by(uuid=uuid).first()
     if inst is None:
         abort(404, description='BAD REQUEST: user already exist')
-    if kwargs['enabled'] is False:
+    if not kwargs['enabled']:
         # unregister instance
         db.session.delete(inst)
         db.session.commit()
