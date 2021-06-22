@@ -5,7 +5,7 @@ from webargs.flaskparser import use_kwargs
 from .app import register_spec
 from .db import db
 from .models import Instance
-from .schemas import InstanceSchema, UpdateInstance, ValidationSchema
+from .schemas import InstanceSchema, Statistics, UpdateInstance, ValidationSchema
 
 
 #
@@ -113,3 +113,36 @@ def get_instance(uuid):
     rv.headers['Access-Control-Allow-Origin'] = '*'
     return rv
 
+
+@api.route('/api/instance/<string:uuid>/submit')
+@use_kwargs(Statistics, location='json')
+def getStats(
+    python_version,
+    indico_version,
+    operating_system,
+    postgres_version,
+    language,
+    debug,
+    **kwargs,
+):
+    """
+    Collects statistics from (registered & active) instances
+    ---
+    arguments:
+        uuid
+    parameters:
+        python_version:
+        indico_version:
+        operating_system:
+        postgres_version:
+        language:
+        kwargs:
+            debug:
+            events:
+            contributions:
+            users:
+            attachments:
+    responses:
+        200: found instance and returned info
+        404: instance not found
+    """

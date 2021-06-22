@@ -47,6 +47,7 @@ class UpdateInstance(Schema):
     email = fields.Email()
     organization = fields.String()
 
+
 class Statistics(Schema):
     python_version = fields.String(required=True)
     indico_version = fields.String(required=True)
@@ -54,7 +55,7 @@ class Statistics(Schema):
     postgres_version = fields.String(required=True)
     language = fields.String(required=True)
     debug = fields.Boolean(required=True)
-    events = fields.Integer(required=True)
-    contributions = fields.Integer(required=True)
-    users = fields.Integer(required=True)
-    attachments = fields.Integer(required=True)
+    events = fields.Integer()
+    contributions = fields.Integer()
+    users = fields.Integer()
+    attachments = fields.Integer()
