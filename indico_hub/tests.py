@@ -1,5 +1,4 @@
 import requests
-from flask import json
 
 
 BASE = 'http://127.0.0.1:12345/'
@@ -63,3 +62,19 @@ if resp:
     print(resp.links)
 # tests for /all
 print((requests.get(BASE + 'all').json()))
+
+
+
+def infoCelery():
+    payload = {
+        'python_version': '3.9.5',
+        'indico_version': '3.0',
+        'operating_system': 'ubuntu 20',
+        'postgres_version': '1.1.6',
+        'language': 'en',
+        'debug': False,
+    }
+    resp = requests.post(
+        BASE + 'api/instance/' + '32c1b21a-cb8d-4ae8-ba51-c22ba6583399', json=payload
+    )
+    print(resp)

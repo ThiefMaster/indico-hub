@@ -3,10 +3,12 @@ import os
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from apispec_webframeworks.flask import FlaskPlugin
+from celery.app.base import Celery
 from flask import Flask, jsonify
 from werkzeug.exceptions import HTTPException, UnprocessableEntity
 
 from . import __version__
+from .config import CELERY_BROKER_URL
 from .db import db, register_db_cli
 
 
@@ -14,6 +16,9 @@ try:
     from flask_cors import CORS
 except ImportError:
     CORS = None
+# adding this temporary
+
+celery = Celery(__name__, broker=CELERY_BROKER_URL)
 
 
 def create_app():
@@ -22,13 +27,14 @@ def create_app():
     app = Flask(__name__)
     if os.environ.get('FLASK_ENABLE_CORS') and CORS is not None:
         CORS(app)
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    app.config.from_pyfile('config.py')
     # TODO: Before going in prod we should load a config file here w/ the DB uri
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///indico_hub'
     register_error_handlers(app)
     db.init_app(app)
     register_db_cli(app)
     app.register_blueprint(api)
+    celery.conf.update(app.config)
     return app
 
 
