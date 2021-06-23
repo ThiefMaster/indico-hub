@@ -76,6 +76,6 @@ def infoCelery():
         'debug': False,
     }
     resp = requests.post(
-        BASE + 'api/instance/' + '32c1b21a-cb8d-4ae8-ba51-c22ba6583399', json=payload
+        BASE + 'api/instance/' + str(all.pop()['uuid']), json=payload
     )
-    print(resp)
+    print(resp.content)

@@ -114,7 +114,7 @@ def get_instance(uuid):
     return rv
 
 
-@api.route('/api/instance/<string:uuid>/submit')
+@api.route('/api/instance/<string:uuid>/submit', methods=["POST", "PATCH"])
 @use_kwargs(Statistics, location='json')
 def getStats(
     python_version,
@@ -146,7 +146,9 @@ def getStats(
         200: found instance and returned info
         404: instance not found
     """
-
+    print(
+        f"{python_version}, {indico_version}, {operating_system}, {postgres_version}, {language}, {debug}"
+    )
     return 'yes so far'
 
 
