@@ -1,3 +1,5 @@
+import json
+
 import requests
 
 
@@ -62,7 +64,6 @@ if resp:
     print(resp.links)
 # tests for /all
 print((requests.get(BASE + 'all').json()))
-
 
 
 def infoCelery():

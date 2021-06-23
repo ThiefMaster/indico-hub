@@ -1,9 +1,8 @@
 import click
-import requests
 from flask import Blueprint, abort, current_app, json, jsonify
 from webargs.flaskparser import use_kwargs
 
-from .app import celery, register_spec
+from .app import register_spec
 from .db import db
 from .models import Instance
 from .schemas import InstanceSchema, Statistics, UpdateInstance, ValidationSchema
@@ -147,16 +146,8 @@ def getStats(
         200: found instance and returned info
         404: instance not found
     """
-    result = requestExternal.delay()
-    result.get()
+
     return 'yes so far'
-
-
-@celery.task
-def requestExternal(**kwargs):
-    print('hello')
-    resp = requests.post('http://127.0.0.1:1122', json=json.dumps(kwargs))
-    return resp
 
 
 @api.route('/all')
