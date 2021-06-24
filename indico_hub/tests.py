@@ -4,8 +4,10 @@ import requests
 
 
 BASE = 'http://127.0.0.1:12345/'
+resp = requests.get(BASE + 'all')
+all = json.loads(resp.content)
 # tests for /instance
-
+'''
 payload = {
     'url': 'https://github.com',
     'contact': '2067473224',
@@ -39,8 +41,7 @@ print(resp.json())
 """
 prepping data for tests
 """
-resp = requests.get(BASE + 'all')
-all = json.loads(resp.content)
+
 payload = {
     'contact': '2067473224',
     'email': 'h.alnamer@cern.ch',
@@ -64,18 +65,21 @@ if resp:
     print(resp.links)
 # tests for /all
 print((requests.get(BASE + 'all').json()))
+'''
 
 
-def infoCelery():
-    payload = {
-        'python_version': '3.9.5',
-        'indico_version': '3.0',
-        'operating_system': 'ubuntu 20',
-        'postgres_version': '1.1.6',
-        'language': 'en',
-        'debug': False,
-    }
-    resp = requests.post(
-        BASE + 'api/instance/' + str(all.pop()['uuid']), json=payload
-    )
-    print(resp.content)
+payload = {
+    'python_version': 'https://github.com',
+    'indico_version': '2067473224',
+    'operating_system': 'h.alnamer@cern.ch',
+    'postgres_version': 'it',
+    'language': 'en',
+    'debug': False,
+}
+uuid = '/' + all.pop()['uuid']
+print(str(uuid))
+
+url = BASE + 'api' + '/instance' + uuid + '/submit'
+print('sending request to ' + url)
+resp = requests.post(url, json=payload)
+print(resp.content)
