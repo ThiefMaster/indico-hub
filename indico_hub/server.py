@@ -116,7 +116,7 @@ def get_instance(uuid):
 
 @api.route('/api/instance/<string:uuid>/submit', methods=['POST', 'PATCH'])
 @use_kwargs(Statistics, location='json')
-def getStats(
+def get_stats(
     python_version,
     indico_version,
     operating_system,
