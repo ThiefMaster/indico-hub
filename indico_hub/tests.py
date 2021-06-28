@@ -8,6 +8,7 @@ resp = requests.get(BASE + 'all')
 all = json.loads(resp.content)
 # tests for /instance
 
+
 def reg1():
     payload = {
         'url': 'https://github.com',
@@ -18,6 +19,8 @@ def reg1():
     print('sending request to ' + BASE + 'instance')
     resp = requests.post(BASE + 'api/instance/', json=payload)
     print(resp)
+
+
 def reg2():
     payload = {
         'url': 'https://github.com',
@@ -26,6 +29,7 @@ def reg2():
     print('sending request to ' + BASE + 'instance')
     resp = requests.post(BASE + 'api/instance/', json=payload)
     print(resp.json())
+
 
 def reg3():
     payload = {
@@ -43,6 +47,8 @@ def reg3():
 """
 prepping data for tests
 """
+
+
 def update1():
     payload = {
         'contact': '2067473224',
@@ -52,6 +58,7 @@ def update1():
     }
     resp = requests.post(BASE + 'api/instance/' + str(all.pop()['uuid']), json=payload)
     print(resp.content)
+
 
 def update2():
     payload = {
@@ -65,6 +72,8 @@ def update2():
 def get1():
     resp = requests.get(BASE + 'api/instance/' + str(all.pop()['uuid']))
     print(resp.content)
+
+
 # tests for /all
 def getAll():
     print((requests.get(BASE + 'all').json()))
@@ -86,6 +95,26 @@ def post_es():
     print('sending request to ' + url)
     resp = requests.post(url, json=payload)
     print(resp.content)
+
+
+def post_es_all():
+    payload = {
+        'python_version': 'https://github.com',
+        'indico_version': '2067473224',
+        'operating_system': 'h.alnamer@cern.ch',
+        'postgres_version': 'it',
+        'language': 'en',
+        'debug': False,
+    }
+    for inst in all:
+        uuid = '/' + inst['uuid']
+        print(str(uuid))
+
+        url = BASE + 'api' + '/instance' + uuid + '/submit'
+        print('sending request to ' + url)
+        resp = requests.post(url, json=payload)
+        print(resp.content)
+
 
 def get_es():
     uuid = '/' + all.pop()['uuid']

@@ -149,6 +149,12 @@ def get_stats(
         200: found instance and returned info
         404: instance not found
     """
+    # fetch machine data
+    inst = Instance.query.filter_by(uuid=uuid).first()
+    if inst is None:
+        abort(404, description='BAD REQUEST: instance isnt registered.')
+    # get inst info
+    inst_data = ValidationSchema().dump(inst)
     # will send these data to elasticsearch
     machine_data = {
         'python_version': python_version,
@@ -158,6 +164,10 @@ def get_stats(
         'language': language,
         'debug': debug,
     }
+    # adding optional info and url
+    for field in kwagrs:
+        machine_data[field] = kwagrs[field]
+    machine_data['url'] = inst_data['url']
     result = es.index(index='reg_data', id=uuid, body=machine_data)
     logger.warning('communicating with es...')
     return jsonify(result)
