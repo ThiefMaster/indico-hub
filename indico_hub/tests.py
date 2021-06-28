@@ -65,7 +65,7 @@ if resp:
     print(resp.links)
 # tests for /all
 print((requests.get(BASE + 'all').json()))
-'''
+
 
 
 payload = {
@@ -82,4 +82,9 @@ print(str(uuid))
 url = BASE + 'api' + '/instance' + uuid + '/submit'
 print('sending request to ' + url)
 resp = requests.post(url, json=payload)
+print(resp.content)
+'''
+uuid = '/' + all.pop()['uuid']
+url = BASE + 'api' + '/instance' + uuid + '/get'
+resp = requests.get(url)
 print(resp.content)

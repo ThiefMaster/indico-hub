@@ -1,9 +1,11 @@
 import click
+from elasticsearch.client import logger
 from flask import Blueprint, abort, current_app, json, jsonify
 from webargs.flaskparser import use_kwargs
 
 from .app import register_spec
 from .db import db
+from .es_conf import es
 from .models import Instance
 from .schemas import InstanceSchema, Statistics, UpdateInstance, ValidationSchema
 
@@ -147,10 +149,24 @@ def get_stats(
         200: found instance and returned info
         404: instance not found
     """
-    print(
-        f'{python_version}, {indico_version}, {operating_system}, {postgres_version}, {language}, {debug}'
-    )
-    return 'yes so far'
+    # will send these data to elasticsearch
+    machine_data = {
+        'python_version': python_version,
+        'indico_version': indico_version,
+        'operating_system': operating_system,
+        'postgres_version': postgres_version,
+        'language': language,
+        'debug': debug,
+    }
+    result = es.index(index='reg_data', id=uuid, body=machine_data)
+    logger.warning('communicating with es...')
+    return jsonify(result)
+
+
+@api.route('/api/instance/<string:uuid>/get', methods=['GET'])
+def get_user(uuid):
+    results = es.get(index='reg_data', id=uuid)
+    return jsonify(results['_source'])
 
 
 @api.route('/all')
