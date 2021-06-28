@@ -51,7 +51,7 @@ def update1():
         'url': 'https://github.com',
     }
     resp = requests.post(BASE + 'api/instance/' + str(all.pop()['uuid']), json=payload)
-    print(resp.content))
+    print(resp.content)
 
 def update2():
     payload = {
