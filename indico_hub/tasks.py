@@ -1,5 +1,6 @@
 import random
 from datetime import datetime
+
 import requests
 
 
@@ -18,6 +19,7 @@ def inst(url, contact, email, org):
     print(uuid)
     es_push_overhead(uuid)
 
+
 def es_push_overhead(uuid):
     year = 2020
     month = 1
@@ -29,21 +31,19 @@ def es_push_overhead(uuid):
     while year < 2021:
         if month == 12:
             month = 1
-            year +=1
+            year += 1
             continue
         if day == 30:
             day = 1
-            month+=1
+            month += 1
             continue
-        timestamp= str(datetime(year, month, day, 10, 10, 10))
-        events+=1
-        contrib+=1
-        users+=1
-        attach+=1
+        timestamp = str(datetime(year, month, day, 10, 10, 10))
+        events += 1
+        contrib += 1
+        users += 1
+        attach += 1
         day += 1
         pushInfo_es(uuid, events, contrib, users, attach, timestamp)
-        print(f"{uuid}, {events}, {contrib}, {users}, {attach}, {timestamp}")
-
 
 def createInst(url, contact, email, org):
     payload = {'url': url, 'contact': contact, 'email': email, 'organization': org}
@@ -68,7 +68,7 @@ def pushInfo_es(uuid, events, contributions, users, attachments, timestamp):
         'contributions': contributions,
         'users': users,
         'attachments': attachments,
-        'timestamp': timestamp
+        'timestamp': timestamp,
     }
 
     url = BASE + 'api' + '/instance/' + uuid + '/submit'
