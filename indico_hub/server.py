@@ -1,5 +1,4 @@
 import click
-from elasticsearch.client import logger
 from flask import Blueprint, abort, current_app, json, jsonify
 from webargs.flaskparser import use_kwargs
 
@@ -67,7 +66,8 @@ def register(url, contact, email, organization):
     )
     db.session.add(inst)
     db.session.commit()
-    return (InstanceSchema().dumps(inst)), 201
+    uuid = InstanceSchema().dump(inst)['uuid']
+    return jsonify({'uuid': uuid}), 201
 
 
 @api.route('/api/instance/<string:uuid>', methods=['PATCH', 'POST'])
@@ -94,7 +94,8 @@ def update_instance(uuid, **kwargs):
     for attr in kwargs:
         setattr(inst, attr, kwargs[attr])
     db.session.commit()
-    return (InstanceSchema().dumps(inst)), 200
+    uuid = InstanceSchema().dump(inst)['uuid']
+    return jsonify({'uuid': uuid}), 200
 
 
 @api.route('/api/instance/<string:uuid>', methods=['GET'])
@@ -126,7 +127,7 @@ def get_stats(
     language,
     debug,
     uuid,
-    **kwagrs,
+    **kwargs,
 ):
     """
     Collects statistics from (registered & active) instances
@@ -165,11 +166,10 @@ def get_stats(
         'debug': debug,
     }
     # adding optional info and url
-    for field in kwagrs:
-        machine_data[field] = kwagrs[field]
+    for field in kwargs:
+        machine_data[field] = kwargs[field]
     machine_data['url'] = inst_data['url']
     result = es.index(index='reg_data', id=uuid, body=machine_data)
-    logger.warning('communicating with es...')
     return jsonify(result)
 
 

@@ -20,7 +20,7 @@ def register_db_cli(app):
     def cli():
         """Manage the database."""
 
-    @cli.command('create-db')
+    @cli.command()
     def create():
         """Create the database tables."""
         db.create_all()
