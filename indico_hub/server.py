@@ -178,6 +178,14 @@ def get_user(uuid):
     results = es.get(index='reg_data', id=uuid)
     return jsonify(results['_source'])
 
+@api.route('/api/instance/getAll/es')
+def get_all_es():
+    res = es.search(index="reg_data", filter_path=['hits.hits._*'], body = {
+    'query': {
+    'match_all' : {}
+    }
+    })['hits']['hits']
+    return jsonify(res)
 
 @api.route('/all')
 def all():
@@ -190,4 +198,5 @@ def all():
 def delete():
     num_rows = db.session.query(Instance).delete()
     db.session.commit()
+    es.indices.delete(index='test-index', ignore=[400, 404])
     return f'{num_rows}'
