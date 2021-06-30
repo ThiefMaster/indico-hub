@@ -45,6 +45,7 @@ def es_push_overhead(uuid):
         day += 1
         pushInfo_es(uuid, events, contrib, users, attach, timestamp)
 
+
 def createInst(url, contact, email, org):
     payload = {'url': url, 'contact': contact, 'email': email, 'organization': org}
     resp = requests.post(BASE + 'api/instance/', json=payload)
@@ -75,3 +76,12 @@ def pushInfo_es(uuid, events, contributions, users, attachments, timestamp):
     print('sending request to ' + url)
     resp = requests.post(url, json=payload)
     print(resp.content)
+
+
+for x in range(250):
+    inst(
+        f'{random.randint(0,100)}.{random.randint(0,100)}.{random.randint(0,100)}',
+        f'{random.randint(0,100), random.randint(0,100)}',
+        f'{random.randint(0,100)}@{random.randint(0,100)}.{random.randint(0,100)}',
+        'it',
+    )
