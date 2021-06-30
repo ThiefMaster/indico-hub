@@ -59,3 +59,4 @@ class Statistics(Schema):
     contributions = fields.Integer()
     users = fields.Integer()
     attachments = fields.Integer()
+    timestamp = fields.DateTime()
