@@ -167,7 +167,10 @@ def get_stats(
     }
     # adding optional info and url
     for field in kwargs:
-        machine_data[field] = kwargs[field]
+        if field == 'timestamp':
+            machine_data['@timestamp'] = kwargs[field]
+        else:
+            machine_data[field] = kwargs[field]
     machine_data['url'] = inst_data['url']
     result = es.index(index='reg_data', id=uuid, body=machine_data)
     return jsonify(result)
