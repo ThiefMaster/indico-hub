@@ -1,8 +1,30 @@
 import uuid
 
+from flask import json
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.types import VARCHAR, TypeDecorator
 
 from .db import db
+
+
+class JSONEncodedDict(TypeDecorator):
+    """
+    Represents an immutable structure as a json-encoded string.
+    Usage::
+        JSONEncodedDict(255)
+    """
+
+    impl = VARCHAR
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            value = json.dumps(value)
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            value = json.loads(value)
+        return value
 
 
 class Instance(db.Model):
@@ -16,10 +38,10 @@ class Instance(db.Model):
     email = db.Column(db.String, nullable=False)
     organization = db.Column(db.String, nullable=False)
     enabled = db.Column(db.Boolean, nullable=False, default=True)
-    # crawl_date = db.Column(db.DateTime)
-    # crawled_data = db.Column(JSONEncodedDict)
-    # geolocation = db.Column(JSONEncodedDict)
-    # registration_date = db.Column(db.DateTime, nullable=False)
+    crawl_date = db.Column(db.DateTime)
+    crawled_data = db.Column(JSONEncodedDict)
+    geolocation = db.Column(JSONEncodedDict)
+    registration_date = db.Column(db.DateTime)
 
     def __repr__(self):
         return f'<Instance {self.id} {self.url}>'

@@ -3,6 +3,7 @@ from flask import Blueprint, abort, current_app, json, jsonify
 from webargs.flaskparser import use_kwargs
 
 from .app import register_spec
+from .crawler import geolocate
 from .db import db
 from .es_conf import es
 from .models import Instance
@@ -164,6 +165,7 @@ def get_stats(
         'postgres_version': postgres_version,
         'language': language,
         'debug': debug,
+        'ip': '',
     }
     # adding optional info and url
     for field in kwargs:
@@ -173,6 +175,7 @@ def get_stats(
             machine_data[field] = kwargs[field]
     machine_data['url'] = inst_data['url']
     result = es.index(index='reg_data', id=uuid, body=machine_data)
+    result = geolocate(inst)
     return jsonify(result)
 
 
@@ -205,3 +208,11 @@ def delete():
     db.session.commit()
     es.indices.delete(index='reg_data', ignore=[400, 404])
     return f'{num_rows}'
+
+
+@api.route('/api/crawl/<string:uuid>')
+def crawl(uuid):
+    inst = Instance.query.filter_by(uuid=uuid).first()
+    geolocate(inst)
+    schema = InstanceSchema()
+    return schema.dumps(inst)

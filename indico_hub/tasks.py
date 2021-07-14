@@ -53,10 +53,10 @@ def createInst(url, contact, email, org):
 
 
 def pushInfo_es(uuid, events, contributions, users, attachments, timestamp):
-    events = random.randint(0, 100)
-    contributions = random.randint(0, 100)
-    users = random.randint(0, 100)
-    attachments = random.randint(0, 100)
+    events = events
+    contributions = contributions
+    users = users
+    attachments = attachments
 
     payload = {
         'python_version': '3.9.5',
@@ -80,7 +80,7 @@ def pushInfo_es(uuid, events, contributions, users, attachments, timestamp):
 
 for x in range(250):
     inst(
-        f'{random.randint(0,100)}.{random.randint(0,100)}.{random.randint(0,100)}',
+        'https://youtube.com',
         f'{random.randint(0,100), random.randint(0,100)}',
         f'{random.randint(0,100)}@{random.randint(0,100)}.{random.randint(0,100)}',
         'it',

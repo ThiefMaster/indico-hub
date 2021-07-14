@@ -18,7 +18,7 @@ def reg1():
     }
     print('sending request to ' + BASE + 'instance')
     resp = requests.post(BASE + 'api/instance/', json=payload)
-    print(resp)
+    print(resp.content)
 
 
 def reg2():
@@ -37,6 +37,18 @@ def reg3():
         'contact': '2067473224',
         'email': 'h.alnamer@cern.ch',
         'organization': 'it',
+    }
+    print('sending request to ' + BASE + 'instance')
+    resp = requests.post(BASE + 'api/instance/', json=payload)
+    print(resp.json())
+
+
+def reg5():
+    payload = {
+        'url': 'https://facebook.com',
+        'email': 'h.alnamer@cern.ch',
+        'organization': 'it',
+        'contact': '2067473224',
     }
     print('sending request to ' + BASE + 'instance')
     resp = requests.post(BASE + 'api/instance/', json=payload)
