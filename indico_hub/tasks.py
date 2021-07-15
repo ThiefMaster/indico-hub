@@ -80,7 +80,7 @@ def pushInfo_es(uuid, events, contributions, users, attachments, timestamp):
 
 for x in range(250):
     inst(
-        'https://youtube.com',
+        'https://facebook.com',
         f'{random.randint(0,100), random.randint(0,100)}',
         f'{random.randint(0,100)}@{random.randint(0,100)}.{random.randint(0,100)}',
         'it',

@@ -208,11 +208,3 @@ def delete():
     db.session.commit()
     es.indices.delete(index='reg_data', ignore=[400, 404])
     return f'{num_rows}'
-
-
-@api.route('/api/crawl/<string:uuid>')
-def crawl(uuid):
-    inst = Instance.query.filter_by(uuid=uuid).first()
-    geolocate(inst)
-    schema = InstanceSchema()
-    return schema.dumps(inst)
