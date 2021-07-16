@@ -5,7 +5,7 @@ from webargs.flaskparser import use_kwargs
 from .app import register_spec
 from .crawler import geolocate
 from .db import db
-from .es_conf import es
+from .es_conf import es, index_name
 from .models import Instance
 from .schemas import InstanceSchema, Statistics, UpdateInstance, ValidationSchema
 
@@ -174,21 +174,21 @@ def get_stats(
         else:
             machine_data[field] = kwargs[field]
     machine_data['url'] = inst_data['url']
-    result = es.index(index='reg_data', id=uuid, body=machine_data)
+    result = es.index(index=index_name, id=uuid, body=machine_data)
     result = geolocate(inst)
     return jsonify(result)
 
 
 @api.route('/api/instance/<string:uuid>/get', methods=['GET'])
 def get_user(uuid):
-    results = es.get(index='reg_data', id=uuid)
+    results = es.get(index=index_name, id=uuid)
     return jsonify(results['_source'])
 
 
 @api.route('/api/instance/getAll/es')
 def get_all_es():
     res = es.search(
-        index='reg_data',
+        index=index_name,
         filter_path=['hits.hits._*'],
         body={'query': {'match_all': {}}},
     )['hits']['hits']
@@ -206,5 +206,5 @@ def all():
 def delete():
     num_rows = db.session.query(Instance).delete()
     db.session.commit()
-    es.indices.delete(index='reg_data', ignore=[400, 404])
+    es.indices.delete(index=index_name, ignore=[400, 404])
     return f'{num_rows}'

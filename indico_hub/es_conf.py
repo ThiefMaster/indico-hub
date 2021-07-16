@@ -20,3 +20,4 @@ def connect_elasticsearch(**kwargs):
 
 
 es = connect_elasticsearch()
+index_name = 'reg_data'

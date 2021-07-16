@@ -1,13 +1,8 @@
 import uuid
 
-from flask import json
-from sqlalchemy.dialects.postgresql import UUID, JSONB
-from sqlalchemy.types import VARCHAR, TypeDecorator
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 
 from .db import db
-
-
-
 
 
 class Instance(db.Model):
