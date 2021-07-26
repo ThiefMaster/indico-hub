@@ -21,14 +21,14 @@ def inst(url, contact, email, org):
 
 
 def es_push_overhead(uuid):
-    year = 2020
+    year = 2015
     month = 1
     day = 1
     events = 0
     contrib = 0
     users = 0
     attach = 0
-    while year < 2021:
+    while year <= 2021:
         if month == 12:
             month = 1
             year += 1
@@ -42,7 +42,7 @@ def es_push_overhead(uuid):
         contrib += 1
         users += 1
         attach += 1
-        day += 1
+        day += 29
         pushInfo_es(uuid, events, contrib, users, attach, timestamp)
 
 
@@ -59,12 +59,12 @@ def pushInfo_es(uuid, events, contributions, users, attachments, timestamp):
     attachments = attachments
 
     payload = {
-        'python_version': '3.9.5',
-        'indico_version': '3.0',
-        'operating_system': 'ubuntu 20.4',
-        'postgres_version': '1.1.6',
-        'language': 'en',
-        'debug': False,
+        "debug": False,
+        "indico_version":"3.0",
+        "language":"en_GB",
+        "operating_system":"CentOS Linux 7",
+        "postgres_version":"9.6.20",
+        "python_version":"3.9.6",
         'events': events,
         'contributions': contributions,
         'users': users,
@@ -77,10 +77,11 @@ def pushInfo_es(uuid, events, contributions, users, attachments, timestamp):
     resp = requests.post(url, json=payload)
     print(resp.content)
 
-
-for x in range(250):
+urls=open('clean', 'r')
+for x in urls:
+    x = x.strip()
     inst(
-        'https://facebook.com',
+        x,
         f'{random.randint(0,100), random.randint(0,100)}',
         f'{random.randint(0,100)}@{random.randint(0,100)}.{random.randint(0,100)}',
         'it',
