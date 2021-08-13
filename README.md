@@ -37,8 +37,8 @@ Swagger UI available at http://localhost:5001
  
 ### Elasticsearch Config 
 **This microservice uses geoip to locate instances.** Thus before using it: 
-        1) open kibana's **Dev Tools** 
-        2) add geoip plugin to your workspace: 
+1) open kibana's **Dev Tools** 
+2) add geoip plugin to your workspace: 
 ```
 PUT _ingest/pipeline/geoip 
 { 
