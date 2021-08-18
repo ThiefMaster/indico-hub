@@ -14,6 +14,7 @@ try:
     from flask_cors import CORS
 except ImportError:
     CORS = None
+# adding this temporary
 
 
 def create_app():
@@ -22,9 +23,9 @@ def create_app():
     app = Flask(__name__)
     if os.environ.get('FLASK_ENABLE_CORS') and CORS is not None:
         CORS(app)
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    app.config.from_pyfile('config.py')
     # TODO: Before going in prod we should load a config file here w/ the DB uri
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///indico_hub'
     register_error_handlers(app)
     db.init_app(app)
     register_db_cli(app)

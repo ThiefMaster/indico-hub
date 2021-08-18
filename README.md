@@ -33,3 +33,36 @@ npm run swagger-ui
 ```
 
 Swagger UI available at http://localhost:5001
+
+ 
+### Elasticsearch Config 
+**This microservice uses geoip to locate instances.** Thus before using it: 
+1) open kibana's **Dev Tools** 
+2) add geoip plugin to your workspace: 
+```
+PUT _ingest/pipeline/geoip 
+{ 
+  "description" : "Add geoip info", 
+  "processors" : [ 
+    { 
+      "geoip" : { 
+        "field" : "ip" 
+      } 
+    } 
+  ] 
+}        
+``` 
+   3)To use geoip plugin, confugre your index to produce a geopoint upon locating the instance: 
+``` 
+put **nameOfYourIndex** 
+{ 
+  "mappings": { 
+    "properties": { 
+      "geoip.location": { 
+        "type": "geo_point" 
+      } 
+    } 
+  } 
+} 
+```
+
